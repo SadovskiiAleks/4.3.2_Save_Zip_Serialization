@@ -16,6 +16,7 @@ public class Main {
         saveGame("A:/Games/temp/save2.dat",save2);
         saveGame("A:/Games/temp/save3.dat",save3);
         zipFiles("A:/Games/temp/save.zip","A:/Games/temp");
+        deleteFile("A:/Games/temp");
         openZip("A:/Games/temp/save.zip","A:/Games/temp/test");
         System.out.println(openProgress("A:/Games/temp/test/save.dat").toString());
     }
@@ -43,16 +44,23 @@ public class Main {
                             byte[] buffer = new byte[file.available()];
                             file.read(buffer);
                             wayZipIn.write(buffer);
+                            file.close();
                         }
                     }
                 }
             wayZipIn.closeEntry();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-            // Пробежаться по файлам и удалиь их (Почему то удаление не работает)
+    public static void deleteFile(String wayToDel) {
+        // Пробежаться по файлам и удалиь их
+        File dir = new File(wayToDel);
+        try {
             if (dir.isDirectory()) {
                 for (File item : dir.listFiles()) {
                     if (item.isFile() && item.getName().indexOf(".dat") != -1) {
-                        item.delete();
                         File newDir2 = new File(item.getParent().replace('\\', '/') + "/" + item.getName());
                         newDir2.delete();
                     }
@@ -61,6 +69,8 @@ public class Main {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+
+
     }
 
     public static void openZip(String wayToFile, String wayToOpenZip){
